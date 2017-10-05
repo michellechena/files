@@ -193,7 +193,7 @@ namespace APIs.Controllers
                         Id = message.Id,
                         IsValid = message.IsValid,
                         Name = message.Name,
-                        Path = message.Path,
+                        Path = message.Path==null?" ": message.Path,
                         StatusId = message.StatusId,
                         TypeId = message.TypeId,
                         PermitionLevel = Entity.UserMailBoxes.Where(z => z.UserId == _UserId && z.MailboxId == _MailBoxId).Select(a => a.PermitionLevel).FirstOrDefault()

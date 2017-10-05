@@ -1,7 +1,7 @@
 ﻿@model TelerikMvcWebMail.Models.FilesViewModel
 
 <div class="col-md-10">
-    @using (Ajax.BeginForm("UpdateFile", "File", new AjaxOptions { HttpMethod = "POST",OnSuccess="OnSucessFunction" }))
+    @using (Ajax.BeginForm("UpdateFile", "File", new AjaxOptions { HttpMethod = "POST",OnSuccess="OnSucessFunction" }, new { @id = "FormUpdateEditEmail" }))
     { 
   
     
@@ -16,7 +16,7 @@
             </div>          
             <div class="col-md-12">
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                <span id="ValidationForName" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" data-valmsg-for="Name" data-valmsg-replace="true" style="display: none;"><span class="k-icon k-i-warning"> </span> Name Required</span>
             </div>
         </div>     
         <div class="form-group">
@@ -25,14 +25,14 @@
             </div>
             <div class="col-md-12">
                 @Html.EditorFor(model => model.Path, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Path, "", new { @class = "text-danger" })
+                <span style="display:none" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" data-for="Path" data-valmsg-for="Path" id="UpdatePath_validationMessage" role="alert"><span class="k-icon k-i-warning"> </span>Invalid path</span>
             </div>
         </div>  
         <div class="form-group">
             <div class="col-md-6 ">
                 @Html.Label("Type")
                 @(Html.Kendo().DropDownList()
-                  .Name("TypeId")
+                  .Name("TypeIdForUpdate")
                   .DataTextField("Text")
                   .DataValueField("Value")
                   .BindTo(new List<SelectListItem>() {
@@ -55,20 +55,66 @@
                   })
                   .HtmlAttributes(new { style = "width: 100%" })
                 )
-                @Html.ValidationMessageFor(model => model.TypeId, "", new { @class = "text-danger" })
+                <span id="ValidationForTypeId" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" data-valmsg-for="TypeId" data-valmsg-replace="true" style="display: none;"><span class="k-icon k-i-warning"> </span>Type Required</span>
             </div>
 
         </div>
 
         <div class="form-group">
             <div class="col-md-12">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="button" value="Update File" id="BtnUpdateFile" class="btn btn-primary" />
             </div>
         </div>
     </div>
 }
 </div>
+
 <script>
+
+    $("#BtnUpdateFile").click(function () {
+       
+        var Validate = true;
+
+        if (!$("#Name").val()) {
+            Validate = false;
+            $("#ValidationForName").css("display", "");
+        }
+        else {
+            $("#ValidationForName").css("display", "none");
+        }
+        if (!$("#TypeIdForUpdate").val()) {
+            Validate = false;
+            $("#ValidationForTypeId").css("display", "");
+        }
+        else {
+            $("#ValidationForTypeId").css("display", "none");
+        }
+        if ($("#Path").val()) {
+            $.ajax({
+                url: "@Url.Action("IsPathValidCheck", "File")",
+                type: "get", //send it through get method
+            async: false,
+            data: {
+                Path: $("#Path").val()
+            },
+            success: function (response) {
+               
+                if (response == false) {
+                    $("#UpdatePath_validationMessage").css("display", "");
+                    Validate = false;
+                }
+                else {
+                    $("#UpdatePath_validationMessage").css("display", "none");
+                }
+            }
+        });
+    }
+
+       if(Validate)
+    {
+           $("#FormUpdateEditEmail").submit();
+    }
+    });
     function OnSucessFunction(e)
     {
         $("#EditEmailPopup").data("kendoWindow").close();

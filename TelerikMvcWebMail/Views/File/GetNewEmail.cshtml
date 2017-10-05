@@ -3,9 +3,9 @@
     <div class="col-md-12" style="margin-top:20px">
         <h3>New Email</h3>
         <hr>
-@using (Ajax.BeginForm("SaveNewFile", "File", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSucessFunctionFormAddEditEmail" }, new { @id = "FormAddEditEmail" }))
-{
-    @Html.HiddenFor(model=>model.RequestFrom,new { Value="NewEmail"})
+        @using (Ajax.BeginForm("SaveNewFile", "File", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSucessFunctionFormAddEditEmail" }, new { @id = "FormAddEditEmail" }))
+            {
+        @Html.HiddenFor(model => model.RequestFrom, new { Value = "NewEmail" })
         <div class="row">
             <div class="form-group col-md-8 ">
                 @Html.Label("Name")
@@ -13,19 +13,15 @@
                           cols="20"
                           id="Name"
                           name="Name"
-                          rows="2" required></textarea>  
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                          rows="2" required></textarea>
+                <span id="ValidationForName" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" data-valmsg-for="Name" data-valmsg-replace="true" style="display: none;"><span class="k-icon k-i-warning"> </span> Name Required</span>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-8 ">
-                @Html.Label("Url")
-                <textarea class="form-control"
-                          cols="20"
-                          id="Path"
-                          name="Path"
-                          rows="2" ></textarea>   
-                @Html.ValidationMessageFor(model => model.Path, "", new { @class = "text-danger" })
+                @Html.Label("Path")
+                @Html.TextAreaFor(x => x.Path, new { @class = "form-control" })
+                <span style="display:none" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" data-for="Path" data-valmsg-for="Path" id="Path_validationMessage" role="alert"><span class="k-icon k-i-warning"> </span>Invalid path</span>
             </div>
         </div>
         <div class="row">
@@ -34,7 +30,7 @@
                 @(Html.Kendo().DropDownList()
                   .Name("TypeId")
                   .DataTextField("Text")
-                  .DataValueField("Value")                  
+                  .DataValueField("Value")
                   .BindTo(new List<SelectListItem>() {
                       new SelectListItem() {
                           Text = "Select Type",
@@ -52,33 +48,77 @@
                           Text = "Pattern",
                           Value = "2"
                       }
-                  })                 
+                  })
                   .HtmlAttributes(new { style = "width: 100%" })
-                        )
-                @Html.ValidationMessageFor(model => model.TypeId, "", new { @class = "text-danger" })
+                )
+                <span id="ValidationForTypeId" class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" data-valmsg-for="TypeId" data-valmsg-replace="true" style="display: none;"><span class="k-icon k-i-warning"> </span>Type Required</span>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-8 ">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="button" value="Save" id="BtnSaveNewFile" class="btn btn-primary" />
                 <input type="button" id="BtnCloseNewEmail" value="Close" class="btn btn-defoult" />
             </div>
         </div>
-}
+        }
     </div>
 </div>
+
 <script>
 
-    $("#FormAddEditEmail").submit(function (eventObj) {
+    $("#BtnSaveNewFile").click(function () {
+        debugger;
+        var Validate = true;
+
+        if (!$("#Name").val()) {
+            Validate = false;
+            $("#ValidationForName").css("display", "");
+        }
+        else {
+            $("#ValidationForName").css("display", "none");
+        }
+        if (!$("#TypeId").val()) {
+            Validate = false;
+            $("#ValidationForTypeId").css("display", "");
+        }
+        else {
+            $("#ValidationForTypeId").css("display", "none");
+        }
+        if ($("#Path").val()) {
+            $.ajax({
+                url: "@Url.Action("IsPathValidCheck", "File")",
+                type: "get", //send it through get method
+                async: false,
+                data: {
+                    Path: $("#Path").val()
+                },
+                success: function (response) {
+                   
+                    if (response == false) {
+                        $("#Path_validationMessage").css("display", "");
+                        Validate = false;
+                    }
+                    else {
+                        $("#Path_validationMessage").css("display", "none");
+                    }
+                }
+            });
+        }
+
+        if(Validate)
+        {
+            $("#FormAddEditEmail").submit();
+        }
+    });
+    $('#FormAddEditEmail').on('submit', function (e) {
        
         var treeview = $("#navigationTreeView").data("kendoTreeView");
         var dataItem = treeview.dataItem(treeview.select());
-       // alert(dataItem.value);
+        // alert(dataItem.value);
         $('<input />').attr('type', 'hidden')
             .attr('name', "FolderId")
             .attr('value', dataItem.value)
             .appendTo('#FormAddEditEmail');
-       // eventObj.preventdefault()
     });
 
     $(function () {
@@ -102,16 +142,17 @@
         });
     });
 
-    function OnSucessFunctionFormAddEditEmail(e)
-    {       
+    function OnSucessFunctionFormAddEditEmail(e) {
         if (e == true) {
             showSuccessNotification("Email saved Successfully");
+            $('#FormAddEditEmail')[0].reset();
+            $("#mainWidget").data("kendoGrid").dataSource.read();
         }
         else {
-            alert("Error ");
+            //alert("Error ");
         }
-        $('#FormAddEditEmail')[0].reset();
-        $("#mainWidget").data("kendoGrid").dataSource.read();
+
+
     }
 
 

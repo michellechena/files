@@ -13,11 +13,11 @@ $(document).ready(function () {
         Cookies.remove('selectedNodeText');
         setMenuItemsAvailability(false, "noselection");
     }
-    
+
     if (Cookies.get('selectedNodeText')) {
-      //  filterGrid(Cookies.get('selectedNodeText'));
+        //  filterGrid(Cookies.get('selectedNodeText'));
     }
-    else if (treeview.select().length == 0) {        
+    else if (treeview.select().length == 0) {
         filterGrid($("#txtFirstFolderId").val());
     }
 
@@ -39,7 +39,7 @@ $(document).ready(function () {
         $("#IsParialViewLoaded").val("1");
         $(".main-section").removeClass("horizontal").removeClass("vertical");
     });
-    
+
     // Attach new mails handler
     $("#mainWidget").on("mousedown", "tr[role='row']", function (e) {
         if (e.which === 3) {
@@ -53,7 +53,7 @@ $(document).ready(function () {
 
     // Attach search textbox handler
     $(".search-textbox").on('keyup', function (e) {
-       
+
         var text = $(e.target).val().toLowerCase();
         var mailGrid = $("#mainWidget").data("kendoGrid");
 
@@ -65,7 +65,7 @@ $(document).ready(function () {
             } else {
                 row.hide();
             }
-           
+
         });
     });
 
@@ -99,9 +99,9 @@ $(document).ready(function () {
 // Menu select item handler and its functions
 function mailMenuSelect(e) {
 
-   
+
     switch (e.item.getAttribute("operation")) {
-       
+
         case "reply":
             mailReply(e.item.id);
             break;
@@ -113,15 +113,15 @@ function mailMenuSelect(e) {
             break;
         case "moveDisabled":
             AfterDisabled = 1;
-            mailMoveDelete(e.item.id);   
-            break;            
+            mailMoveDelete(e.item.id);
+            break;
         case "read":
             mailMarkAsReadUnread("read");
             break;
         case "unread":
             mailMarkAsReadUnread("unread");
             break;
-        case "NewFolder":           
+        case "NewFolder":
             window.location.href = "../File/MailBoxFolders";
             break;
         case "print":
@@ -162,18 +162,32 @@ function mailForward(id) {
 }
 
 function mailMoveDelete(id) {
-    
     var grid = $("#mainWidget").data("kendoGrid");
-    SelectedRowsForMove=grid.select().length;
-    for (var i = 0; i < grid.select().length; i++) {
-        var selectedItem = grid.dataItem(grid.select()[i]);
-        selectedItem.FolderId = id;
-        selectedItem.dirty = true;
+    SelectedRowsForMove = grid.select().length;
+    if (id == "Deleted") {
+        kendo.confirm("Are you sure that you want to Delete " + SelectedRowsForMove + " record").then(function () {
+            for (var i = 0; i < grid.select().length; i++) {
+                var selectedItem = grid.dataItem(grid.select()[i]);
+                selectedItem.FolderId = id;
+                selectedItem.dirty = true;
+            }
+            grid.dataSource.sync();
+        }, function () {
+            return false;
+        });
     }
-    
-    grid.dataSource.sync();
+    else {
+        for (var i = 0; i < grid.select().length; i++) {
+            var selectedItem = grid.dataItem(grid.select()[i]);
+            selectedItem.FolderId = id;
+            selectedItem.dirty = true;
+        }
+        grid.dataSource.sync();
+    }
+
+
     //$("#mainWidget").data("kendoGrid").dataSource.read();
-   
+
 }
 
 function mailMarkAsReadUnread(id) {
@@ -215,7 +229,7 @@ function mailPrint() {
             kendo.saveAs({
                 dataURI: data,
                 fileName: "Mail.pdf"
-            }) ;
+            });
         });
     }
 }
@@ -251,7 +265,7 @@ function updateSelectedClasses(element) {
 }
 
 // Select category handler in the sidebar navigation
-function selectCategory(e) {    
+function selectCategory(e) {
     var dataItem = this.dataItem(e.node);
     var selectedText = e.sender.dataItem(e.node).value;
 
@@ -271,7 +285,7 @@ function selectCategory(e) {
 }
 
 // Filter grid according to the currently selected mails category
-function filterGrid(selectedText) { 
+function filterGrid(selectedText) {
     var mailsGrid = $("#mainWidget").data("kendoGrid");
     if (!mailsGrid) {
         window.location.href = baseUrl + '/Home/Index';
@@ -282,24 +296,24 @@ function filterGrid(selectedText) {
 }
 
 // Get the number of mails in each category
-function getinitialNumberOfItems(gridData, MailBoxFolders) {    
+function getinitialNumberOfItems(gridData, MailBoxFolders) {
     var ActiveCount = 0;
-    var DisabledCount = 0;    
+    var DisabledCount = 0;
     var numbers = { Inbox: { TotalCount: 0, ActiveCount: 0, DisabledCount: 0 } };
     for (var FolderCount = 0; FolderCount < MailBoxFolders.length; FolderCount++) {
         var FolderName = MailBoxFolders[FolderCount].value;
         numbers[FolderName] = { TotalCount: 0, ActiveCount: 0, DisabledCount: 0 };
     }
     for (var FolderCountForActive = 0; FolderCountForActive < MailBoxFolders.length; FolderCountForActive++) {
-       
+
         var FolderWiseTotalCount = 0;
         for (var i = 0; i < gridData.length; i++) {
-          
+
             var currentItemCategory = gridData[i].FolderId;
-            try{
-                if (FolderCountForActive == 0) {               
+            try {
+                if (FolderCountForActive == 0) {
                     numbers[currentItemCategory].TotalCount += 1;
-                }                
+                }
                 if (gridData[i].StatusId == "1" && gridData[i].FolderId == MailBoxFolders[FolderCountForActive].value) {
                     numbers[currentItemCategory].ActiveCount += 1;
                 }
@@ -307,18 +321,17 @@ function getinitialNumberOfItems(gridData, MailBoxFolders) {
                     numbers[currentItemCategory].DisabledCount += 1;
                 }
             }
-            catch(err)
-            {
+            catch (err) {
 
             }
-          
+
         }
-    }  
-  
+    }
+
     return numbers;
 }
 
-$("body").on("click", "#BtnCloseNewEmail", function () {   
+$("body").on("click", "#BtnCloseNewEmail", function () {
     $("#PartalViewContet").css("display", "none");
     $("#mainViewContent").css("display", "");
 });
@@ -331,7 +344,7 @@ $("#navigationTreeView").click(function () {
 });
 
 function dataSourceChange(e) {
-   
+
     var grid = $("#mainWidget").data("kendoGrid");
     var treeview = $("#navigationTreeView").data("kendoTreeView");
     if (e.action === "sync") {
@@ -349,28 +362,27 @@ function dataSourceChange(e) {
             }
         }
     }
-    
+
 }
 
 function dataSourceRequestEnd(e) {
 
-    
+
     if (e.type == "update") {
-        
-        if (SelectedRowsForMove != "")
-        {
+
+        debugger;
+        if (SelectedRowsForMove != "") {
             TotalSelectedRecordForMove = parseInt(TotalSelectedRecordForMove) + 1;
             //SelectedRowsForMove = "";
-            if (SelectedRowsForMove == TotalSelectedRecordForMove)
-            {
+            if (SelectedRowsForMove == TotalSelectedRecordForMove) {
                 SelectedRowsForMove = "";
                 TotalSelectedRecordForMove = 0;
                 $("#mainWidget").data("kendoGrid").dataSource.read();
             }
-           
+
         }
-       
-        
+
+
     }
     else {
         setTimeout(function () {
@@ -391,8 +403,7 @@ function dataSourceRequestEnd(e) {
 
 var GridDataInAjaxCall;
 
-function GetFoldersByMailBoxId(gridData, FromSearchFolder)
-{
+function GetFoldersByMailBoxId(gridData, FromSearchFolder) {
     $.ajax({
         url: APIBaseUrl + 'api/ApiHome/GetMailBoxFolderList',
         cache: false,
@@ -424,11 +435,10 @@ function GetFoldersByMailBoxId(gridData, FromSearchFolder)
     })
 }
 
-function getFolderList(FromSearchFolder)
-{
-   
+function getFolderList(FromSearchFolder) {
+
     $.ajax({
-        url: APIBaseUrl + "api/ApiHome/GetEmailList?AjaxRequest=YES&MailBoxId=" + $("#ListOfMailBox").val() + "&UserId="+$("#txtLoginUserId").val(),
+        url: APIBaseUrl + "api/ApiHome/GetEmailList?AjaxRequest=YES&MailBoxId=" + $("#ListOfMailBox").val() + "&UserId=" + $("#txtLoginUserId").val(),
         async: false,
         success: function (gridData) {
             GridDataInAjaxCall = gridData;
@@ -436,13 +446,13 @@ function getFolderList(FromSearchFolder)
         }
 
     });
-    
+
 }
 
 
 // Attach mails grid events
 function mailGridDataBound(e) {
-   
+
     var grid = e.sender;
 
     for (var i = 0; i < grid.tbody.find(">tr").length; i++) {
@@ -451,13 +461,13 @@ function mailGridDataBound(e) {
             $(grid.tbody.find(">tr")[i]).addClass("unread")
         }
     }
-    
-   
+
+
     bindCheckboxes();
     polulateSelectedRows(grid);
 
     getFolderList();
-   
+
     if (grid.select().length === 1) {
         $(".mail-details-wrapper").removeClass("empty");
     }
@@ -481,7 +491,7 @@ function mailGridDataBound(e) {
 
 
 function mailSelectionChanged(e) {
-
+    debugger;
     var selectedRows = this.select();
 
     selectionChanged(e.sender, 'mailsSelectedRow');
@@ -500,7 +510,7 @@ function mailSelectionChanged(e) {
 }
 
 function selectionChanged(widget, selectedRowPrefix) {
-    
+
 }
 
 // Populated selected rows, based on previously saved selection
@@ -508,7 +518,7 @@ function polulateSelectedRows(widget) {
     var navigationTreeView = $('#navigationTreeView').data('kendoTreeView');
     var treeViewSelectedItem = navigationTreeView.select();
     var widgetDataSource = widget.dataSource;
- 
+
     if (treeViewSelectedItem.length === 1) {
         var treeViewDataItem = navigationTreeView.dataItem(treeViewSelectedItem);
         var treeViewItemValue = treeViewDataItem.value;
@@ -541,7 +551,7 @@ function polulateSelectedRows(widget) {
 // Bind mail ceckboxes
 function bindCheckboxes() {
     $('.chkbx').on('change', function (e) {
-
+        debugger;
         var target = $(e.target);
         var checked = e.target.checked;
         var mailsGrid = $("#mainWidget").data("kendoGrid");
@@ -575,7 +585,7 @@ function bindCheckboxes() {
 
 // Configure menu items availability
 function setMenuItemsAvailability(isEnabled, selection) {
-   
+
     //var menu = $('#mailMenu').data('kendoMenu');
     //var contextMenu = $('#mailContextMenu').data('kendoContextMenu');
 
@@ -604,7 +614,7 @@ function setMenuItemsAvailability(isEnabled, selection) {
     //    var menu = $("#mailMenu").kendoMenu().data("kendoMenu");
     //    menu.enable("#Disable", false);
     //}
-    
+
 }
 
 function toggleEnableMenuItems(widget, widgetId, isEnabled) {
@@ -615,7 +625,7 @@ function toggleEnableMenuItems(widget, widgetId, isEnabled) {
 
 // Check checkbox on mail selection
 function checkSelectedCheckbox(selectedRows) {
-
+    debugger
     var mailsGrid = $('#mainWidget').data('kendoGrid');
     var mailsInView = mailsGrid.dataSource.view().length;
 

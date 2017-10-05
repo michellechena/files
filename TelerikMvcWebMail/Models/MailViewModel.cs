@@ -19,9 +19,12 @@ namespace TelerikMvcWebMail.Models
     public class FilesViewModel
     {
         public int Id { get; set; }
+
+        //[System.Web.Mvc.Remote("IsPathValidCheck", "File", ErrorMessage = "Path not valid")]
         public string Path { get; set; }
         [Required(ErrorMessage = "File Name Required")]
-        public string Name { get; set; }
+        public string Name { get; set; }        
+        public byte TypeIdForUpdate { get; set; }
         public byte TypeId { get; set; }
         public string FolderId { get; set; }
         public byte StatusId { get; set; }

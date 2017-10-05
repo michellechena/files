@@ -83,6 +83,7 @@ namespace TelerikMvcWebMail.Controllers
         [HttpPost]
         public ActionResult UpdateFile(FilesViewModel _MailViewModel)
         {
+            _MailViewModel.TypeId = _MailViewModel.TypeIdForUpdate;
             if (string.IsNullOrEmpty(_MailViewModel.Path))
             {
                 _MailViewModel.IsValid = false;
@@ -216,6 +217,26 @@ namespace TelerikMvcWebMail.Controllers
             var Data = TelerikMvcWebMail.Common.CallWebApi("api/ApiHome/SaveNewFile", RestSharp.Method.POST, _MailViewModel);
             bool Result = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<bool>(Data);
             return Json(Result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult IsPathValidCheck(string Path)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(Path, UriKind.Absolute, out uriResult)
+            && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (result)
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+        
+           
         }
 
 

@@ -74,8 +74,8 @@
                         .HeaderTemplate("<input type='checkbox' class='master-checkbox' />")
                         .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
 
-                    columns.Bound(p => p.Name).Title("Name").HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
-                    columns.Bound(p => p.Path).Title("Path").Width(250).HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    columns.Bound(p => p.Name).Title("Name").HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" }).ClientTemplate("# if (StatusId == '0') { # <div style='color:rgb(183,180,180)'>#=Name#</div> # } else{ #<div >#=Name#</div> # }#");
+                    columns.Bound(p => p.Path).Title("Path").Width(250).HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" }).ClientTemplate("# if (StatusId == '0') { # <div style='color:rgb(183,180,180)'>#=Path#</div> # } else{ #<div >#=Path#</div> # }#"); ;
                     columns.Bound(p => p.IsValid).Title("IsValid")
                              .ClientTemplate("# if (IsValid == true) { # <span class='label label-primary'>Valid</span> # } else { #<span class='label label-danger'>In-Valid</span>  # } #")
                              .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
@@ -86,7 +86,7 @@
                             .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
                     columns.Bound(p => p.FolderId).Title("Folder").Hidden(true)
                             .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
-                    
+
                     columns.Bound(p => p.Id).Title(" ")
                             .ClientTemplate("<span class='label label-info' onClick=FunctionEditEmail('#=Id#')>Edit File</span>")
                             .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
@@ -109,7 +109,7 @@
                     .Update(Update => Update
                     .Url(MailUpdateUrl)
                     .Type(HttpVerbs.Post)
-                    
+
                     )
 
                     .Events(e => e.Change("dataSourceChange").RequestEnd("dataSourceRequestEnd"))
