@@ -1,0 +1,29 @@
+﻿@import '_variables.scss';
+
+.main-section {
+    overflow: auto;
+}
+
+.k-grid {
+    border: 0;
+    border-color: #ebebeb;
+
+    table {
+        table-layout: fixed;
+    }
+
+    tr:hover {
+        background: $accent;
+    }
+
+    td,
+    th.k-header {
+        border-width: 0 0 1px 0;
+        border-color: #ebebeb;
+    }
+
+    td:first-child,
+    th:first-child {
+        text-align: right;
+    }
+}

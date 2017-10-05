@@ -1,0 +1,37 @@
+﻿<script>
+    function onSuccessFileupload(e) {
+        
+        $("#FileStatus").append(e.response);
+        $("#mainWidget").data("kendoGrid").dataSource.read();
+    }
+    function OnFileUpload(e) {   
+        var treeview = $("#navigationTreeView").data("kendoTreeView");
+        var dataItem = treeview.dataItem(treeview.select());
+        e.data = { Folderid: dataItem.value };
+    }
+</script>
+<div class="inner-section">
+    <div class="col-md-12" style="margin-top:20px">
+        <h3>Upload File</h3>
+        <hr>  
+        <div class="form-group col-md-6">
+            @(Html.Kendo().Upload()
+           .Name("attachments")
+           .Async(async => async
+            .Save("SubmitUploadFile", "File")
+            .AutoUpload(false)
+            )
+            .HtmlAttributes(new { accept = ".txt" })            
+             .Events(e => e
+             .Success("onSuccessFileupload")
+              .Upload("OnFileUpload")
+              )
+            )
+          </div> 
+        <br>
+        <br>
+        <div class="col-md-12" id="FileStatus">
+        </div>
+    </div>
+</div>
+

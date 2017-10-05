@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+
+@Scripts.Render("~/Scripts/sidebar.js")
+
+<script id="treeview-template" type="text/kendo-ui-template">
+    <textarea rows="1" style="color:black; border-radius:4px;display:none" class="menutxtFoldername">#: item.text #</textarea>
+    <div class="menudivFoldername"> #: item.text #</div>  
+    <span style="display:none" class="MenuFolderid" >#: item.value #</span>
+    <div style="display:inline"> T:#: item.number #</div> 
+    <div style="margin-left:8px;display:inline"> A:#: item.Active #</div>
+    <div  style="margin-left:8px;display:inline"> D:#: item.Disable #</div> 
+    
+</script>
+
+<aside class="main-sidebar">
+    <div class="content" id="SidebarMenu">       
+        <div class="form-group col-md-12" style="padding:10px 5px 0px 3px" >
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtFolderSearch" />
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <div style="padding:10px 0px 0px 0px;display:none" id="DivAddFolderFromMenu">
+                <div class="input-group">
+                    <input type="text" class="form-control TxtAddFolderFromMenu" id="TxtAddFolderFromMenu" placeholder="Folder Name" style="border-radius:4px"/>                   
+                </div>                             
+            </div>
+        </div>
+        <div class="col-md-12 " style="padding:0px !important">
+        @(Html.Kendo().TreeView()
+            .Name("navigationTreeView")
+            .Events(e => e.Select("selectCategory"))
+            .TemplateId("treeview-template")
+        )
+         </div>
+        <div>
+            @(Html.Kendo().ContextMenu()
+            .Name("mailContextMenu")
+            .Target("#SidebarMenu")
+            .Orientation(ContextMenuOrientation.Vertical)
+            .Items(items =>
+            {
+                items.Add().Text("Add Folder").HtmlAttributes(new { @id = "MenuAddNewFolder", @operation = "MenuAddNewFolder" });
+                items.Add().Text("Rename Folder").HtmlAttributes(new { @id = "MenuRenameFolder", @operation = "MenuRenameFolder" });
+                items.Add().Text("Delele Folder").HtmlAttributes(new { @id = "MenuDeleteFolder", @operation = "MenuDeleteFolder" });
+                 })
+            .Events(e => e.Select("mailContextMenuSelect").Open("mailContextMenuOpen"))
+            )
+        </div>
+    </div>    
+</aside>
+<script>
+    $("#txtFolderSearch").keyup(function () {
+        getFolderList("FromSearchFolder");
+        $("#mainWidget").find('tbody').css("display", "none");
+        
+        
+    });
+
+
+
+    
+
+</script>
