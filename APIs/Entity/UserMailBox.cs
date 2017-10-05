@@ -21,5 +21,6 @@ namespace APIs.Entity
         public string PermitionLevel { get; set; }
     
         public virtual MailBox MailBox { get; set; }
+        public virtual User User { get; set; }
     }
 }

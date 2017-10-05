@@ -222,16 +222,27 @@
                 var TotalColumns = $("#mainWidget").data("kendoGrid").columns;
               
                 //alert(MailBoxPermition);
-                 if (MailBoxPermition == "1")
+                 if (MailBoxPermition == "0")
                  {
                      grid.hideColumn(TotalColumns.length - 1);
-                     var menu = $("#mailMenu").kendoMenu().data("kendoMenu");    
-                     menu.enable("li", false);
+                     //var menu = $("#mailMenu").kendoMenu().data("kendoMenu");    
+                     //menu.enable("li", false);
+                     $("#mailMenu").css("display", "none");
+                     $("#MenuSetDefoultFolder").css("display", "none");
+                     $("#MenuDeleteFolder").css("display", "none");
+                     $("#MenuRenameFolder").css("display", "none");
+                     $("#BtnAddNewFolder").css("display", "none");
+                     
                 }
                 else {
                      grid.showColumn(TotalColumns.length - 1);
-                     var menu = $("#mailMenu").kendoMenu().data("kendoMenu");
-                     menu.enable("li", true);
+                     //var menu = $("#mailMenu").kendoMenu().data("kendoMenu");
+                     //menu.enable("li", true);
+                     $("#mailMenu").css("display", "");
+                     $("#MenuSetDefoultFolder").css("display", "");
+                     $("#MenuDeleteFolder").css("display", "");
+                     $("#MenuRenameFolder").css("display", "");
+                     $("#BtnAddNewFolder").css("display", "");
                 }
             
                 //   debugger;

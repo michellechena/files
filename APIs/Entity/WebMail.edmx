@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="WebFileModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="WebMailModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="FeedBack">
           <Key>
             <PropertyRef Name="id" />
@@ -46,7 +46,7 @@
           <Property Name="StatusId" Type="tinyint" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'C:\USERS\SUDHIR.SHINDE\DOWNLOADS\WEBMAL_1\WEBMAIL\APIS\APP_DATA\WEBMAIL.MDF.dbo.UserMailBox' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserMailBox">
           <Key>
             <PropertyRef Name="UserId" />
@@ -67,7 +67,7 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
           <Property Name="LastName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Files_Folder">
+        <Association Name="FK__Files__FolderId__756D6ECB">
           <End Role="Folder" Type="Self.Folder" Multiplicity="1" />
           <End Role="Files" Type="Self.Files" Multiplicity="*" />
           <ReferentialConstraint>
@@ -79,7 +79,7 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Folder_MailBox">
+        <Association Name="FK__Folder__MailBoxI__634EBE90">
           <End Role="MailBox" Type="Self.MailBox" Multiplicity="1" />
           <End Role="Folder" Type="Self.Folder" Multiplicity="*" />
           <ReferentialConstraint>
@@ -91,7 +91,7 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserMailBox_MailBox">
+        <Association Name="FK__UserMailB__Mailb__4F47C5E3">
           <End Role="MailBox" Type="Self.MailBox" Multiplicity="1" />
           <End Role="UserMailBox" Type="Self.UserMailBox" Multiplicity="*" />
           <ReferentialConstraint>
@@ -103,7 +103,19 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="WebFileModelStoreContainer">
+        <Association Name="FK__UserMailB__UserI__40F9A68C">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserMailBox" Type="Self.UserMailBox" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserMailBox">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebMailModelStoreContainer">
           <EntitySet Name="FeedBack" EntityType="Self.FeedBack" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Files" EntityType="Self.Files" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Folder" EntityType="Self.Folder" Schema="dbo" store:Type="Tables" />
@@ -118,50 +130,35 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
     [UserMailBox].[PermitionLevel] AS [PermitionLevel]
     FROM [dbo].[UserMailBox] AS [UserMailBox]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_Files_Folder" Association="Self.FK_Files_Folder">
+          <AssociationSet Name="FK__Files__FolderId__756D6ECB" Association="Self.FK__Files__FolderId__756D6ECB">
             <End Role="Folder" EntitySet="Folder" />
             <End Role="Files" EntitySet="Files" />
           </AssociationSet>
-          <AssociationSet Name="FK_Folder_MailBox" Association="Self.FK_Folder_MailBox">
+          <AssociationSet Name="FK__Folder__MailBoxI__634EBE90" Association="Self.FK__Folder__MailBoxI__634EBE90">
             <End Role="MailBox" EntitySet="MailBox" />
             <End Role="Folder" EntitySet="Folder" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserMailBox_MailBox" Association="Self.FK_UserMailBox_MailBox">
+          <AssociationSet Name="FK__UserMailB__Mailb__4F47C5E3" Association="Self.FK__UserMailB__Mailb__4F47C5E3">
             <End Role="MailBox" EntitySet="MailBox" />
             <End Role="UserMailBox" EntitySet="UserMailBox" />
           </AssociationSet>
+          <AssociationSet Name="FK__UserMailB__UserI__40F9A68C" Association="Self.FK__UserMailB__UserI__40F9A68C">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserMailBox" EntitySet="UserMailBox" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="WebFileModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="WebMailEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="FeedBacks" EntityType="WebFileModel.FeedBack" />
-          <EntitySet Name="Files" EntityType="WebFileModel.File" />
-          <EntitySet Name="Folders" EntityType="WebFileModel.Folder" />
-          <EntitySet Name="MailBoxes" EntityType="WebFileModel.MailBox" />
-          <EntitySet Name="Users" EntityType="WebFileModel.User" />
-          <EntitySet Name="UserMailBoxes" EntityType="WebFileModel.UserMailBox" />
-          <AssociationSet Name="FK_Files_Folder" Association="WebFileModel.FK_Files_Folder">
-            <End Role="Folder" EntitySet="Folders" />
-            <End Role="File" EntitySet="Files" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Folder_MailBox" Association="WebFileModel.FK_Folder_MailBox">
-            <End Role="MailBox" EntitySet="MailBoxes" />
-            <End Role="Folder" EntitySet="Folders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserMailBox_MailBox" Association="WebFileModel.FK_UserMailBox_MailBox">
-            <End Role="MailBox" EntitySet="MailBoxes" />
-            <End Role="UserMailBox" EntitySet="UserMailBoxes" />
-          </AssociationSet>
-        </EntityContainer>
+      <Schema Namespace="WebMailModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="FeedBack">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="FeedBack1" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FeedBack1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="File">
@@ -170,12 +167,12 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Path" Type="String" MaxLength="2083" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TypeId" Type="Byte" Nullable="false" />
           <Property Name="FolderId" Type="Int32" Nullable="false" />
           <Property Name="StatusId" Type="Byte" Nullable="false" />
           <Property Name="IsValid" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Folder" Relationship="WebFileModel.FK_Files_Folder" FromRole="File" ToRole="Folder" />
+          <NavigationProperty Name="Folder" Relationship="Self.FK__Files__FolderId__756D6ECB" FromRole="Files" ToRole="Folder" />
         </EntityType>
         <EntityType Name="Folder">
           <Key>
@@ -186,28 +183,29 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
           <Property Name="MailBoxId" Type="Int32" Nullable="false" />
           <Property Name="TypeId" Type="Byte" Nullable="false" />
           <Property Name="StatusId" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="Files" Relationship="WebFileModel.FK_Files_Folder" FromRole="Folder" ToRole="File" />
-          <NavigationProperty Name="MailBox" Relationship="WebFileModel.FK_Folder_MailBox" FromRole="Folder" ToRole="MailBox" />
+          <NavigationProperty Name="Files" Relationship="Self.FK__Files__FolderId__756D6ECB" FromRole="Folder" ToRole="Files" />
+          <NavigationProperty Name="MailBox" Relationship="Self.FK__Folder__MailBoxI__634EBE90" FromRole="Folder" ToRole="MailBox" />
         </EntityType>
         <EntityType Name="MailBox">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ShortName" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
-          <Property Name="FullName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ShortName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StatusId" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="Folders" Relationship="WebFileModel.FK_Folder_MailBox" FromRole="MailBox" ToRole="Folder" />
-          <NavigationProperty Name="UserMailBoxes" Relationship="WebFileModel.FK_UserMailBox_MailBox" FromRole="MailBox" ToRole="UserMailBox" />
+          <NavigationProperty Name="Folders" Relationship="Self.FK__Folder__MailBoxI__634EBE90" FromRole="MailBox" ToRole="Folder" />
+          <NavigationProperty Name="UserMailBoxes" Relationship="Self.FK__UserMailB__Mailb__4F47C5E3" FromRole="MailBox" ToRole="UserMailBox" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserMailBoxes" Relationship="Self.FK__UserMailB__UserI__40F9A68C" FromRole="Users" ToRole="UserMailBox" />
         </EntityType>
         <EntityType Name="UserMailBox">
           <Key>
@@ -219,23 +217,24 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
           <Property Name="IsMainContact" Type="Boolean" />
           <Property Name="IsDefoultMailBox" Type="Boolean" />
           <Property Name="PermitionLevel" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="MailBox" Relationship="WebFileModel.FK_UserMailBox_MailBox" FromRole="UserMailBox" ToRole="MailBox" />
+          <NavigationProperty Name="MailBox" Relationship="Self.FK__UserMailB__Mailb__4F47C5E3" FromRole="UserMailBox" ToRole="MailBox" />
+          <NavigationProperty Name="User" Relationship="Self.FK__UserMailB__UserI__40F9A68C" FromRole="UserMailBox" ToRole="Users" />
         </EntityType>
-        <Association Name="FK_Files_Folder">
-          <End Type="WebFileModel.Folder" Role="Folder" Multiplicity="1" />
-          <End Type="WebFileModel.File" Role="File" Multiplicity="*" />
+        <Association Name="FK__Files__FolderId__756D6ECB">
+          <End Role="Folder" Type="Self.Folder" Multiplicity="1" />
+          <End Role="Files" Type="Self.File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Folder">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="File">
+            <Dependent Role="Files">
               <PropertyRef Name="FolderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Folder_MailBox">
-          <End Type="WebFileModel.MailBox" Role="MailBox" Multiplicity="1" />
-          <End Type="WebFileModel.Folder" Role="Folder" Multiplicity="*" />
+        <Association Name="FK__Folder__MailBoxI__634EBE90">
+          <End Role="MailBox" Type="Self.MailBox" Multiplicity="1" />
+          <End Role="Folder" Type="Self.Folder" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MailBox">
               <PropertyRef Name="id" />
@@ -245,9 +244,9 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserMailBox_MailBox">
-          <End Type="WebFileModel.MailBox" Role="MailBox" Multiplicity="1" />
-          <End Type="WebFileModel.UserMailBox" Role="UserMailBox" Multiplicity="*" />
+        <Association Name="FK__UserMailB__Mailb__4F47C5E3">
+          <End Role="MailBox" Type="Self.MailBox" Multiplicity="1" />
+          <End Role="UserMailBox" Type="Self.UserMailBox" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MailBox">
               <PropertyRef Name="id" />
@@ -257,74 +256,110 @@ warning 6002: The table/view 'WebFile.dbo.UserMailBox' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__UserMailB__UserI__40F9A68C">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserMailBox" Type="Self.UserMailBox" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserMailBox">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebMailEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="FeedBacks" EntityType="Self.FeedBack" />
+          <EntitySet Name="Files" EntityType="Self.File" />
+          <EntitySet Name="Folders" EntityType="Self.Folder" />
+          <EntitySet Name="MailBoxes" EntityType="Self.MailBox" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserMailBoxes" EntityType="Self.UserMailBox" />
+          <AssociationSet Name="FK__Files__FolderId__756D6ECB" Association="Self.FK__Files__FolderId__756D6ECB">
+            <End Role="Folder" EntitySet="Folders" />
+            <End Role="Files" EntitySet="Files" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Folder__MailBoxI__634EBE90" Association="Self.FK__Folder__MailBoxI__634EBE90">
+            <End Role="MailBox" EntitySet="MailBoxes" />
+            <End Role="Folder" EntitySet="Folders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserMailB__Mailb__4F47C5E3" Association="Self.FK__UserMailB__Mailb__4F47C5E3">
+            <End Role="MailBox" EntitySet="MailBoxes" />
+            <End Role="UserMailBox" EntitySet="UserMailBoxes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserMailB__UserI__40F9A68C" Association="Self.FK__UserMailB__UserI__40F9A68C">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserMailBox" EntitySet="UserMailBoxes" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="WebFileModelStoreContainer" CdmEntityContainer="WebMailEntities">
+        <EntityContainerMapping StorageEntityContainer="WebMailModelStoreContainer" CdmEntityContainer="WebMailEntities">
           <EntitySetMapping Name="FeedBacks">
-            <EntityTypeMapping TypeName="WebFileModel.FeedBack">
+            <EntityTypeMapping TypeName="WebMailModel.FeedBack">
               <MappingFragment StoreEntitySet="FeedBack">
-                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
-                <ScalarProperty Name="FeedBack1" ColumnName="FeedBack" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FeedBack1" ColumnName="FeedBack" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Files">
-            <EntityTypeMapping TypeName="WebFileModel.File">
+            <EntityTypeMapping TypeName="WebMailModel.File">
               <MappingFragment StoreEntitySet="Files">
-                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="FolderId" ColumnName="FolderId" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Path" ColumnName="Path" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="FolderId" ColumnName="FolderId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Folders">
-            <EntityTypeMapping TypeName="WebFileModel.Folder">
+            <EntityTypeMapping TypeName="WebMailModel.Folder">
               <MappingFragment StoreEntitySet="Folder">
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="MailBoxId" ColumnName="MailBoxId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MailBoxId" ColumnName="MailBoxId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MailBoxes">
-            <EntityTypeMapping TypeName="WebFileModel.MailBox">
+            <EntityTypeMapping TypeName="WebMailModel.MailBox">
               <MappingFragment StoreEntitySet="MailBox">
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="WebFileModel.User">
+            <EntityTypeMapping TypeName="WebMailModel.User">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserMailBoxes">
-            <EntityTypeMapping TypeName="WebFileModel.UserMailBox">
+            <EntityTypeMapping TypeName="WebMailModel.UserMailBox">
               <MappingFragment StoreEntitySet="UserMailBox">
-                <ScalarProperty Name="PermitionLevel" ColumnName="PermitionLevel" />
-                <ScalarProperty Name="IsDefoultMailBox" ColumnName="IsDefoultMailBox" />
-                <ScalarProperty Name="IsMainContact" ColumnName="IsMainContact" />
-                <ScalarProperty Name="MailboxId" ColumnName="MailboxId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="MailboxId" ColumnName="MailboxId" />
+                <ScalarProperty Name="IsMainContact" ColumnName="IsMainContact" />
+                <ScalarProperty Name="IsDefoultMailBox" ColumnName="IsDefoultMailBox" />
+                <ScalarProperty Name="PermitionLevel" ColumnName="PermitionLevel" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

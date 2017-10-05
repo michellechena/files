@@ -65,7 +65,7 @@ namespace APIs.Controllers
             string Result = string.Empty;
             using (var Entity = new WebMailEntities())
             {
-                _Model = Entity.UserMailBoxes.Where(x => x.UserId == UserId && x.PermitionLevel !="0").Select(s => new UserMailBoxApiModel
+                _Model = Entity.UserMailBoxes.Where(x => x.UserId == UserId ).Select(s => new UserMailBoxApiModel
                 {
                     MailboxId = s.MailboxId,
                     FullName = s.MailBox.FullName,
@@ -609,6 +609,48 @@ namespace APIs.Controllers
             {
                 return false;
             }
+        }
+        [HttpGet]
+        public bool SetDefoultFolder(string FolderId,string SelectedMailBoxId)
+        {
+            try
+            {
+                List<Folder> _Folder = new List<Folder>();
+
+                using (var Entity = new WebMailEntities())
+                {
+                    long _SelectedMailBoxId = Convert.ToInt32(SelectedMailBoxId);
+                    _Folder = Entity.Folders.Where(s => s.MailBoxId == _SelectedMailBoxId && s.TypeId==0).ToList();
+                }
+                foreach (var Folder in _Folder)
+                {
+                    using (var Entity1 = new WebMailEntities())
+                    {
+                        Folder _Folder1 = new Folder();
+                        _Folder1 = Entity1.Folders.Where(x => x.Id == Folder.Id).FirstOrDefault();
+                        _Folder1.TypeId = 1;
+                        Entity1.SaveChanges();
+                    }
+                  
+                }
+                
+                using (var Entity = new WebMailEntities())
+                {
+                    Folder _Folder1 = new Folder();
+                    int _FolderId = Convert.ToInt32(FolderId);
+                    _Folder1 = Entity.Folders.Where(x => x.Id == _FolderId).FirstOrDefault();
+                    _Folder1.TypeId = 0;
+                    //Entity.Folders.Add(_Folder1);
+                    Entity.SaveChanges();
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        
+            return true;
         }
 
     }

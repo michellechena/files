@@ -3,8 +3,13 @@
 }
 
 @Scripts.Render("~/Scripts/sidebar.js")
-
+<style>
+    #mailMenu .k-animation-container{
+        top:35px !important;
+    }
+    </style>
 <script id="treeview-template" type="text/kendo-ui-template">
+
     <textarea rows="1" style="color:black; border-radius:4px;display:none" class="menutxtFoldername">#: item.text #</textarea>
     <div class="menudivFoldername"> #: item.text #</div>  
     <span style="display:none" class="MenuFolderid" >#: item.value #</span>
@@ -15,17 +20,18 @@
 </script>
 
 <aside class="main-sidebar">
-    <div class="content" id="SidebarMenu">       
+    <div class="content" id="SidebarMenu">   
+        <div id="DvAddNewFolder" class="col-md-12" style="padding:0px 1px 0px 3px" ><span id="BtnAddNewFolder" class="new-btn new-Task" >New Folder</span></div>    
         <div class="form-group col-md-12" style="padding:10px 5px 0px 3px" >
             <div class="input-group">
-                <input type="text" class="form-control" id="txtFolderSearch" />
+                <input type="text" class="form-control" id="txtFolderSearch" placeholder="Search Folder" />
                 <span class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </span>
             </div>
             <div style="padding:10px 0px 0px 0px;display:none" id="DivAddFolderFromMenu">
                 <div class="input-group">
-                    <input type="text" class="form-control TxtAddFolderFromMenu" id="TxtAddFolderFromMenu" placeholder="Folder Name" style="border-radius:4px"/>                   
+                    <input type="text" class="form-control TxtAddFolderFromMenu" id="TxtAddFolderFromMenu" placeholder="Enter Folder Name" style="border-radius:4px"/>                   
                 </div>                             
             </div>
         </div>
@@ -43,7 +49,7 @@
             .Orientation(ContextMenuOrientation.Vertical)
             .Items(items =>
             {
-                items.Add().Text("Add Folder").HtmlAttributes(new { @id = "MenuAddNewFolder", @operation = "MenuAddNewFolder" });
+                items.Add().Text("Set Defoult Folder").HtmlAttributes(new { @id = "MenuSetDefoultFolder", @operation = "MenuSetDefoultFolder" });
                 items.Add().Text("Rename Folder").HtmlAttributes(new { @id = "MenuRenameFolder", @operation = "MenuRenameFolder" });
                 items.Add().Text("Delele Folder").HtmlAttributes(new { @id = "MenuDeleteFolder", @operation = "MenuDeleteFolder" });
                  })
@@ -61,7 +67,12 @@
     });
 
 
-
+    $("#BtnAddNewFolder").click(function () {
+        
+        $("#TxtAddFolderFromMenu").val('');
+        $("#DivAddFolderFromMenu").css("display", "")
+        $("#TxtAddFolderFromMenu").focus();
+    })
     
 
 </script>

@@ -99,7 +99,7 @@
                 .DataSource(dataSource => dataSource
                     .Ajax()
                     .AutoSync(true)
-                    .PageSize(100)
+                    .PageSize(10)
                     .Model(model => model.Id(p => p.Id))
                     .Read(read => read
                     .Url(MailRedUrl)
@@ -109,6 +109,7 @@
                     .Update(Update => Update
                     .Url(MailUpdateUrl)
                     .Type(HttpVerbs.Post)
+                    
                     )
 
                     .Events(e => e.Change("dataSourceChange").RequestEnd("dataSourceRequestEnd"))

@@ -3,7 +3,9 @@ var marked = false;
 var markedAsUnread = false;
 var savedScroll = 0;
 var AfterDisabled = 0;
-var  OtherOwner = 'NO';
+var OtherOwner = 'NO';
+var SelectedRowsForMove = "";
+var TotalSelectedRecordForMove = 0;
 $(document).ready(function () {
     // Preselect Mails category
     var treeview = $("#navigationTreeView").data("kendoTreeView");
@@ -51,18 +53,19 @@ $(document).ready(function () {
 
     // Attach search textbox handler
     $(".search-textbox").on('keyup', function (e) {
+       
         var text = $(e.target).val().toLowerCase();
         var mailGrid = $("#mainWidget").data("kendoGrid");
 
         var dataInView = mailGrid.dataSource.view();
         dataInView.forEach(function (item) {
             var row = $('tr[data-uid="' + item.uid + '"]');
-
-            if (item.Name.toLowerCase().indexOf(text) > -1) {
+            if (item.Name.toLowerCase().indexOf(text) > -1 || item.Path.toLowerCase().indexOf(text) > -1) {
                 row.show();
             } else {
                 row.hide();
             }
+           
         });
     });
 
@@ -161,14 +164,16 @@ function mailForward(id) {
 function mailMoveDelete(id) {
     
     var grid = $("#mainWidget").data("kendoGrid");
-
+    SelectedRowsForMove=grid.select().length;
     for (var i = 0; i < grid.select().length; i++) {
         var selectedItem = grid.dataItem(grid.select()[i]);
         selectedItem.FolderId = id;
         selectedItem.dirty = true;
     }
-
+    
     grid.dataSource.sync();
+    //$("#mainWidget").data("kendoGrid").dataSource.read();
+   
 }
 
 function mailMarkAsReadUnread(id) {
@@ -349,18 +354,38 @@ function dataSourceChange(e) {
 
 function dataSourceRequestEnd(e) {
 
-    setTimeout(function () {
-        var grid = $("#mainWidget").data("kendoGrid");
-        if (grid.dataSource.view().length == 0) {
-            setMenuItemsAvailability(false, "noselection");           
+    
+    if (e.type == "update") {
+        
+        if (SelectedRowsForMove != "")
+        {
+            TotalSelectedRecordForMove = parseInt(TotalSelectedRecordForMove) + 1;
+            //SelectedRowsForMove = "";
+            if (SelectedRowsForMove == TotalSelectedRecordForMove)
+            {
+                SelectedRowsForMove = "";
+                TotalSelectedRecordForMove = 0;
+                $("#mainWidget").data("kendoGrid").dataSource.read();
+            }
+           
         }
-    }, 100)
-    if (AfterDisabled == 1) {      
-       // $("#mainWidget").data("kendoGrid").dataSource.read();
-        var treeview = $("#navigationTreeView").data("kendoTreeView");
-        var dataItem = treeview.dataItem(treeview.select());
-        filterGrid(dataItem.value);
-        AfterDisabled = 0;
+       
+        
+    }
+    else {
+        setTimeout(function () {
+            var grid = $("#mainWidget").data("kendoGrid");
+            if (grid.dataSource.view().length == 0) {
+                setMenuItemsAvailability(false, "noselection");
+            }
+        }, 100)
+        if (AfterDisabled == 1) {
+            // $("#mainWidget").data("kendoGrid").dataSource.read();
+            var treeview = $("#navigationTreeView").data("kendoTreeView");
+            var dataItem = treeview.dataItem(treeview.select());
+            filterGrid(dataItem.value);
+            AfterDisabled = 0;
+        }
     }
 }
 
@@ -456,7 +481,7 @@ function mailGridDataBound(e) {
 
 
 function mailSelectionChanged(e) {
-    debugger;
+
     var selectedRows = this.select();
 
     selectionChanged(e.sender, 'mailsSelectedRow');
@@ -516,7 +541,7 @@ function polulateSelectedRows(widget) {
 // Bind mail ceckboxes
 function bindCheckboxes() {
     $('.chkbx').on('change', function (e) {
-        debugger;
+
         var target = $(e.target);
         var checked = e.target.checked;
         var mailsGrid = $("#mainWidget").data("kendoGrid");
@@ -590,7 +615,7 @@ function toggleEnableMenuItems(widget, widgetId, isEnabled) {
 
 // Check checkbox on mail selection
 function checkSelectedCheckbox(selectedRows) {
-    debugger
+
     var mailsGrid = $('#mainWidget').data('kendoGrid');
     var mailsInView = mailsGrid.dataSource.view().length;
 

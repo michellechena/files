@@ -2,6 +2,8 @@
 var SelectedRenameFolderName;
 
 
+
+
 function mailContextMenuSelect(e) {
     
     $('.menutxtFoldername').css("display", "none");
@@ -45,10 +47,28 @@ function mailContextMenuSelect(e) {
             }
              
             break;
-        case "MenuAddNewFolder":
-            $("#TxtAddFolderFromMenu").val('');
-            $("#DivAddFolderFromMenu").css("display", "")
-            $("#TxtAddFolderFromMenu").focus();
+        case "MenuSetDefoultFolder":
+           var SelectedFolder = $(e.target).find("#navigationTreeView_tv_active").find('.menutxtFoldername').text();
+           var r = confirm("Are you sure to set defoult folder to " + SelectedFolder);
+          
+           var URl = APIBaseUrl + '/api/ApiHome/SetDefoultFolder';
+           if (r == true) {
+               $.ajax({
+                   url: URl,
+                   cache: false,
+                   async: false,
+                   data: { FolderId: $(e.target).find("#navigationTreeView_tv_active").find('.MenuFolderid').html(), SelectedMailBoxId:$("#ListOfMailBox").val() },
+                   success: function (EditContent) {
+                       GetFoldersByMailBoxId(GridDataInAjaxCall, null);
+                       showSuccessNotification("Defoult Folder set to " + SelectedFolder);
+                   },
+                   error: function (error) {
+                       alert('Error');
+                   }
+               })
+            } else {
+                txt = "You pressed Cancel!";
+            }
             break;
 
     }

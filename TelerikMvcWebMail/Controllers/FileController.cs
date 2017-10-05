@@ -1,17 +1,18 @@
-﻿namespace TelerikMvcWebMail.Controllers
-{
+﻿using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Web;
+using System.Web.Mvc;
+using TelerikMvcWebMail.Filter;
+using TelerikMvcWebMail.Models;
 
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Web;
-    using System.Web.Mvc;
-    using TelerikMvcWebMail.Models;
-    // [Authorize]
-    //[SessionExpire]
-    [Authorize]
-   // [Authorize]
-    //[SessionExpire]
+namespace TelerikMvcWebMail.Controllers
+{
+  
     public class FileController : Controller
     {
         
@@ -22,7 +23,7 @@
         } 
         public ActionResult Index()
         {
-            var LoginUser = User.Identity.Name;
+            var LoginUser = "sudhir@weiyingchotmail.onmicrosoft.com";
             SignIn Model = new Models.SignIn();
             Model.UserName = LoginUser;
             SessionMangment.Users_.APIHostUrl = System.Configuration.ConfigurationManager.AppSettings["APIHostUrl"];
@@ -176,7 +177,7 @@
                     Model.FileContent = FileContent;                    
                     Model.FileName = file.FileName;
                     Model.FolderId = Folderid;
-                    var Data = Common.CallWebApi("api/ApiHome/SubmitUploadFile", RestSharp.Method.POST, Model);
+                    var Data = TelerikMvcWebMail.Common.CallWebApi("api/ApiHome/SubmitUploadFile", RestSharp.Method.POST, Model);
                     bool Result = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<bool>(Data);
                     if(Result)
                     {
