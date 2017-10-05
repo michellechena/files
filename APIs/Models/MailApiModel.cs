@@ -72,7 +72,8 @@ namespace APIs.Models
         public string value { get; set; }
         public string number { get; set; }
         public string MailBoxName { get; set; }
-      
-       
+        public string TypeId { get; set; }
+
+
     }
 }

@@ -131,7 +131,8 @@ namespace APIs.Controllers
                 {
                     MailBoxName = MailBoxId.ToString(),
                     text = x.Name,
-                    value = x.Id.ToString(),                   
+                    value = x.Id.ToString(),
+                    TypeId = x.TypeId,
                 }).ToList();
             }
             else

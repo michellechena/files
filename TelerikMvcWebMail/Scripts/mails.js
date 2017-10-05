@@ -402,7 +402,7 @@ function dataSourceRequestEnd(e) {
 }
 
 var GridDataInAjaxCall;
-
+var DefoultFolderId = "ABC";
 function GetFoldersByMailBoxId(gridData, FromSearchFolder) {
     $.ajax({
         url: APIBaseUrl + 'api/ApiHome/GetMailBoxFolderList',
@@ -410,15 +410,21 @@ function GetFoldersByMailBoxId(gridData, FromSearchFolder) {
         async: false,
         data: { MailBoxId: $("#ListOfMailBox").val(), SerchedFolderString: $("#txtFolderSearch").val(), UserId: $("#txtLoginUserId").val() },
         success: function (MailBoxFolders) {
+           
             $('#MoveMenu').find('.k-menu-group').html('');
             var numbers = getinitialNumberOfItems(gridData.Data, MailBoxFolders);
             for (var FolderCount = 0; FolderCount < MailBoxFolders.length; FolderCount++) {
+             
                 var FolderName = MailBoxFolders[FolderCount].value;
                 MailBoxFolders[FolderCount].number = numbers[FolderName].TotalCount;
                 MailBoxFolders[FolderCount].Active = numbers[FolderName].ActiveCount;
                 MailBoxFolders[FolderCount].Disable = numbers[FolderName].DisabledCount;
                 var FolderId = MailBoxFolders[FolderCount].value;
-
+                if (MailBoxFolders[FolderCount].TypeId == "0")
+                {
+                    DefoultFolderId = FolderId;
+                }
+                
                 $(".disabledMenu").remove();
                 var newds = '<li class="k-item k-state-default" id="' + FolderId + '" operation="moveDelete" role="menuitem" aria-disabled="false"><span class="k-link">' + MailBoxFolders[FolderCount].text + '</span></li>';
                 $('#MoveMenu').find('.k-menu-group').append(newds);
@@ -437,12 +443,35 @@ function GetFoldersByMailBoxId(gridData, FromSearchFolder) {
 
 function getFolderList(FromSearchFolder) {
 
+  
+    var SelectedFolderId = "ABC";
     $.ajax({
         url: APIBaseUrl + "api/ApiHome/GetEmailList?AjaxRequest=YES&MailBoxId=" + $("#ListOfMailBox").val() + "&UserId=" + $("#txtLoginUserId").val(),
         async: false,
         success: function (gridData) {
+            
             GridDataInAjaxCall = gridData;
             GetFoldersByMailBoxId(gridData, FromSearchFolder);
+           
+            var treeview = $("#navigationTreeView").data("kendoTreeView");
+            var dataItem = treeview.dataItem(treeview.select());
+            if (dataItem) {
+                if (dataItem.TypeId == "0") {
+                    DefoultFolderId = dataItem.value;
+                    $('#MoveMenu').css("display", "none");
+                    $('#Disable').css("display", "none");
+                    $('#MenuNewMail').css("display", "none");
+                }
+                else {
+                    SelectedFolderId = dataItem.value;
+                    $('#MoveMenu').css("display", "");
+                    $('#Disable').css("display", "");
+                    $('#MenuNewMail').css("display", "");
+                   
+                }
+            }
+            $("#mailMenu").find("#" + DefoultFolderId).remove();
+            $("#mailMenu").find("#" + SelectedFolderId).remove();
         }
 
     });
