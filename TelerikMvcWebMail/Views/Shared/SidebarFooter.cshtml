@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+@Scripts.Render("~/Scripts/sidebar-footer.js")
+
+<div class="footer">
+    <div class="links">
+        <p id="btn-about">About This App</p>
+        @Html.ActionLink("Download Source Code", "", "")
+    </div>
+    <p>
+        Copyright &copy; @DateTime.Now.Year Progress<br/>Software Corporation and/or its subsidiaries or affiliates.
+    </p>
+    <p>
+        All Rights Reserved.
+    </p>
+</div>
+
+<div>
+    @(Html.Kendo().Window()
+        .Name("aboutWindow")
+        .Title("")
+        .Content("loading...")
+        .Iframe(false)
+        .Modal(true)
+        .LoadContentFrom("About", "Home")
+        .Actions(actions => actions.Close())
+        .Draggable(true)
+        .Visible(false)
+    )
+</div>

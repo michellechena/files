@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    
+    <style>
+
+          .HideElement {
+            display: none;
+        }
+
+        .km-widget.km-buttongroup {
+            margin: 0 auto;
+        }
+
+        .k-highcontrast .k-button-group .k-button {
+            background-color: rgb(44, 35, 43);
+        }
+
+        .highlight-yellow {
+            background-color: #e2b575 !important;
+        }
+        .SucessNotification
+        {
+            background-color:#5cb85c !important ;
+        }
+        .ErrorNotification
+        {
+            background-color:#d9534f !important ;
+        }
+        .km-checkbox, .km-switch
+        {
+            width:6.7rem !important;
+        }
+        .km-switch-handle
+        {
+            background-color:#0f7fd2 !important;
+        }
+
+     
+        div.k-treeview {  
+             white-space: inherit !important;
+        </style>
+    <title>@ViewBag.Title - My Kendo UI MVC Application</title>
+    <!--GoogleAnalytics tracking script-->
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-111455-1']);
+        _gaq.push(['_setDomainName', '.telerik.com']);
+        _gaq.push(['_addIgnoredRef', 'telerik.com']);
+        _gaq.push(['_trackPageview']);
+        (function ()
+        {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+        function trackPage(page)
+        {
+            _gaq.push(['_trackPageview', page]);
+        }
+    </script>
+    <link type="image/x-icon" href="~/favicon-progress.ico" rel="shortcut icon">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://kendo.cdn.telerik.com/2017.1.118/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="https://kendo.cdn.telerik.com/2017.1.118/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="https://kendo.cdn.telerik.com/2017.1.118/styles/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="https://kendo.cdn.telerik.com/2017.1.118/styles/kendo.metro.min.css" rel="stylesheet" />
+    <link href="https://kendo.cdn.telerik.com/2017.1.118/styles/kendo.dataviz.metro.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    @Styles.Render("~/Content/css")
+    @RenderSection("PageStyles", false)
+    @RenderSection("PageStylesPartial", false)
+   
+    <script src="https://kendo.cdn.telerik.com/2017.1.118/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.1.118/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.1.118/js/kendo.aspnetmvc.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.1.118/js/kendo.timezones.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.1.118/js/pako_deflate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.ajax.unobtrusive/3.2.4/jquery.unobtrusive-ajax.min.js"></script>
+</head>
+<body>
+    <div id="BaseUrl" data-baseurl="@Context.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")"></div>
+    <div id="APIBaseUrl" data-baseurl="@SessionMangment.Users_.APIHostUrl"></div>
+    <input type="hidden" id="txtLoginUserId" value="@SessionMangment.Users_.UserId">
+    @Scripts.Render("~/Scripts/layout.js")
+
+    <script id="button-template" type="text/x-kendo-template">
+    </script>
+    <script id="tooltip-template" type="text/x-kendo-template">
+        <div class="image-wrapper">
+            <img src="https://demos.telerik.com/kendo-ui/content/web/Customers/PICCO.jpg" style="border-radius: 100%" />
+        </div>
+        <p class="name">@Session["FullName"]</p>
+        <p>@Session["UserEmail"]</p>     
+      
+         <a href = "@Url.Action("SignOut", "Home")" class="btn btn-primary" > Sign Out </a>
+    
+    </script>
+    <script type="text/kendo-ui" id="menu-item-template">
+        <span>
+            <img src='https://demos.telerik.com/kendo-ui/content/web/Customers/PICCO.jpg' />
+        </span>
+    </script>
+    <header class="main-header">
+       
+       
+        @{
+            long UserId =Convert.ToInt64(Session["UserId"]);
+            string APUrl = "api/ApiHome/UserMailBox?UserId=" + UserId + "&request=DRP";
+            var MailBox= TelerikMvcWebMail.Common.CallWebApi(APUrl, RestSharp.Method.GET);
+            List<SelectListItem> _MailBox = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<List<SelectListItem>>(MailBox);
+
+        }
+        @(Html.Kendo().DropDownList()
+          .Name("ListOfMailBox")
+          .DataTextField("Text")
+          .DataValueField("Value")
+          .Events(e => e.Change("DrpMailBoxChnages"))
+          .BindTo(_MailBox)          
+          .HtmlAttributes(new { style = "width:13%;font-size:14px;background-color:white;margin-left:1%;margin-top:1%;border-radius:10px" })
+        )
+            
+        @(Html.Kendo().Menu()
+                .Name("mainMenu")
+                .Items(items =>
+                {
+                    items.Add().Text("Files").Action("Index", "Home");
+                    //items.Add().Text("Calendar").Action("Index", "Calendar");
+                    //items.Add().Text("People").Action("Index", "Contacts");
+                    //items.Add().Text("Tasks").Action("Index", "Tasks");
+                    items.Add().Text("<span class='image-wrapper'><img src='https://demos.telerik.com/kendo-ui/content/web/Customers/PICCO.jpg'/><span/>").Encoded(false);
+                })
+        )
+
+        @(Html.Kendo().Tooltip()
+                .For("#mainMenu > li:last")
+                .ShowOn(TooltipShowOnEvent.Click)
+                .AutoHide(false)
+                .ContentTemplateId("tooltip-template")
+        )
+    </header>
+    
+    <content class="main-content" >    
+       
+        @RenderBody()
+        
+    </content>
+    <span id="notification" style="display:block;background-color:gray"></span>
+</body>
+</html>
+<script id="successTemplate" type="text/x-kendo-template">
+    <div class="upload-success SucessNotification" style="
+    width: 224px;
+    padding: 1px;
+    height: 41px;
+    color: white;">     
+        <h5 style="margin-top:10px">#= message #</h5>
+    </div>
+
+</script>
+<script id="errorTemplate" type="text/x-kendo-template">
+    <div class="wrong-pass ErrorNotification" style="
+    width: 224px;
+    padding: 1px;
+    height: 41px;
+    color: white;">      
+        <h5 style="margin-top:10px">#= message #</h5>
+    </div>
+</script>
+
+<input type="hidden" id="IsParialViewLoaded">
+<script>
+
+    $(document).ready(function () {
+        try{
+            GetMailboxFolders();
+        }
+        catch(err)
+        {
+
+        }
+    });
+    function DrpMailBoxChnages(e)
+    {
+        GetMailboxFolders();
+       
+    }
+    function GetMailboxFolders()
+    {
+        $.ajax({
+            url: APIBaseUrl + '/api/ApiHome/CheckMailBoxPermition',
+            cache: false,
+            async: false,
+            data: { MailBoxId: $("#ListOfMailBox").val(), UserId: $("#txtLoginUserId").val() },
+            success: function (MailBoxPermition) {
+                 var grid = $("#mainWidget").data("kendoGrid");
+                var TotalColumns = $("#mainWidget").data("kendoGrid").columns;
+              
+                //alert(MailBoxPermition);
+                 if (MailBoxPermition == "1")
+                 {
+                     grid.hideColumn(TotalColumns.length - 1);
+                     var menu = $("#mailMenu").kendoMenu().data("kendoMenu");    
+                     menu.enable("li", false);
+                }
+                else {
+                     grid.showColumn(TotalColumns.length - 1);
+                     var menu = $("#mailMenu").kendoMenu().data("kendoMenu");
+                     menu.enable("li", true);
+                }
+            
+                //   debugger;
+                var PathName = window.location.pathname;
+                if (PathName.indexOf("MailBoxFolders") > 0) {
+                    window.location.href = document.location.origin + "/Home/FromOtherPageRequest?MailBoxId=" + $("#ListOfMailBox").val()
+                }
+                else {
+
+                    $("#mainWidget").data("kendoGrid").dataSource.read();
+                    $.ajax({
+                        url: APIBaseUrl + '/api/ApiHome/GetMailBoxFolderList',
+                        cache: false,
+                        async: false,
+                        data: { MailBoxId: $("#ListOfMailBox").val(), Defoult: "YES", UserId: $("#txtLoginUserId").val() },
+                        success: function (DefoultFolder) {
+                            Cookies.set('ChangedIdOfFolder', "0");
+                            filterGrid(DefoultFolder);
+
+                        },
+                        error: function (error) {
+                            // alert('Error');
+                        }
+                    })
+                }
+
+            },
+            error: function (error) {
+                // alert('Error');
+            }
+        })
+    }
+    var notification = $("#notification").kendoNotification({
+        position: {
+            pinned: true,
+            top: 60,
+            right: 30
+        },
+        autoHideAfter: 0,
+        stacking: "down",
+        message: "test",
+        templates: [{
+            type: "error",
+            template: $("#errorTemplate").html()
+        }, {
+            type: "upload-success",
+            template: $("#successTemplate").html()
+        }]
+
+    }).data("kendoNotification");
+    function showSuccessNotification(message) {
+        notification.hide();
+        notification.show({
+            message: message
+        }, "upload-success");
+        setTimeout(function () { notification.hide(); }, 3000)
+    }
+    function showErrorNotification(message) {
+        notification.show({
+            message: message
+        }, "error");
+        setTimeout(function () { notification.hide(); }, 3000)
+    }
+    </script>

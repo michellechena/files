@@ -1,0 +1,201 @@
+﻿@{
+    ViewBag.Title = "Mail";
+    Layout = " ~/Views/Shared/_Layout.cshtml";
+    var MailRedUrl = SessionMangment.Users_.APIHostUrl+"/api/ApiHome/GetEmailList";
+    var MailUpdateUrl = SessionMangment.Users_.APIHostUrl + "api/ApiHome/UpdateEmailDetailes";
+}
+
+@section PageStyles {
+    <link href="@Url.Content("~/Content/mail.css")" rel="stylesheet" type="text/css" />
+}
+
+
+
+
+@model IEnumerable<TelerikMvcWebMail.Models.FilesViewModel>
+
+@Html.Partial("Sidebar")
+<div style="display:flex;flex:1;display:none" id="PartalViewContet">
+
+</div>
+<div style="display:flex;flex:1" id="mainViewContent">
+    <input type="hidden" id="txtFirstFolderId" value="@ViewBag.FirstFolderId">
+    <section class="main-section horizontal">
+        <div class="col-md-12">
+        <div class="toolbar">
+            <div class="left">
+                @(Html.Kendo().Menu()
+                .Name("mailMenu")
+                .OpenOnClick(true)
+                .Items(items =>
+                {
+
+                    items.Add().Text("Delete").HtmlAttributes(new { @id = "Deleted", @operation = "moveDelete" });
+                    items.Add()
+                        .Text("Move").HtmlAttributes(new { @id="MoveMenu"})
+                        .Items(children =>
+                        {
+                            children.Add().Text("Inbox").HtmlAttributes(new { @id = "Inbox", @operation = "moveDelete" });
+                            children.Add().Text("Junk").HtmlAttributes(new { @id = "Junk", @operation = "moveDelete" });
+                            children.Add().Text("Drafts").HtmlAttributes(new { @id = "Drafts", @operation = "moveDelete" });
+                            children.Add().Text("Deleted").HtmlAttributes(new { @id = "Deleted", @operation = "moveDelete" });
+                            children.Add().Text("NativeScript").HtmlAttributes(new { @id = "NativeScript", @operation = "moveDelete" });
+                            children.Add().Text("KendoUI").HtmlAttributes(new { @id = "KendoUI", @operation = "moveDelete" });
+                            //children.Add().Text("MailBox1_Folder1").HtmlAttributes(new { @id = "MailBox1_Folder1", @operation = "moveDelete" });
+                        });
+                    items.Add().Text("Disable").HtmlAttributes(new { @id = "Disable", @operation = "moveDisabled" });
+                    items.Add().Text("New Mail").HtmlAttributes(new { @id = "MenuNewMail", @operation = "moveDelete" });
+                    items.Add().Text("New Folder").HtmlAttributes(new { @id = "NewFolder", @operation = "NewFolder" });
+                })
+                .Events(e => e.Select("mailMenuSelect"))
+                )
+            </div>
+            <div class="right">
+                <span class="btn btn-vertical-pane iconOnly" onclick="changeToVerticalPanes(this)" title="Display vertical panes"></span>
+                <span class="btn btn-horizontal-pane selected iconOnly" onclick="changeToHorizontalPanes(this)" title="Display cards"></span>
+            </div>
+        </div>
+        <div class="inner-section">
+            <div class="mail-grid" id="EMailDiv">
+                <span class="searchbox">
+                    <input type="text" class="k-input search-textbox" placeholder="Search mail ..." name="to-textbox">
+                </span>
+                @(Html.Kendo().Grid(Model)
+                .Name("mainWidget")
+                .HtmlAttributes(new { @class = "HideElement" })
+                .Columns(columns =>
+                {
+                    columns.Bound(p => p.Id)
+                        .Title("")
+                        .Width(60)
+                        .Sortable(false)
+                        .ClientTemplate("<input type='checkbox' class='chkbx' />")
+                        .HeaderTemplate("<input type='checkbox' class='master-checkbox' />")
+                        .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+
+                    columns.Bound(p => p.Name).Title("Name").HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    columns.Bound(p => p.Path).Title("Path").Width(250).HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    columns.Bound(p => p.IsValid).Title("IsValid")
+                             .ClientTemplate("# if (IsValid == true) { # <span class='label label-primary'>Valid</span> # } else { #<span class='label label-danger'>In-Valid</span>  # } #")
+                             .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    columns.Bound(p => p.TypeId).Title("Type")
+                            .ClientTemplate("# if (TypeId == '0') { # <span class='label label-primary'>Exact</span> # } else if (TypeId == '1') { #<span class='label label-warning'>Container</span>  # }  else if (TypeId == '2') { #<span class='label label-info'>Pattern</span>  # }#")
+                            .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    columns.Bound(p => p.StatusId).Title("Status").ClientTemplate("# if (StatusId == '1') { #  <ul class='ActiveDisabledCheckbox' id='#=Id#'><li ><input type='checkbox' class='notifications-switch ' aria-label='Notifications Switch' checked='checked' /></li></ul># } else { #<ul class='ActiveDisabledCheckbox' id='#=Id#'><li><input type='checkbox' class='notifications-switch' aria-label='Notifications Switch'  /></li></ul> # } #")
+                            .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    columns.Bound(p => p.FolderId).Title("Folder").Hidden(true)
+                            .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                    
+                    columns.Bound(p => p.Id).Title(" ")
+                            .ClientTemplate("<span class='label label-info' onClick=FunctionEditEmail('#=Id#')>Edit File</span>")
+                            .HtmlAttributes(new { @class = " #if(IsValid == false){#highlight-yellow#}#" });
+                })
+                .Scrollable()
+                .Sortable()
+
+                .Pageable(p => p.Enabled(true))
+                .Selectable(s => s.Mode(GridSelectionMode.Multiple))
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .AutoSync(true)
+                    .PageSize(100)
+                    .Model(model => model.Id(p => p.Id))
+                    .Read(read => read
+                    .Url(MailRedUrl)
+                    .Data("SendSelectdMailBoxIdAndLoginUser")
+                    .Type(HttpVerbs.Get)
+                    )
+                    .Update(Update => Update
+                    .Url(MailUpdateUrl)
+                    .Type(HttpVerbs.Post)
+                    )
+
+                    .Events(e => e.Change("dataSourceChange").RequestEnd("dataSourceRequestEnd"))
+                )
+                .Events(e => e
+                    .Change("mailSelectionChanged")
+                    .DataBound("mailGridDataBound")
+                )
+                )
+            </div>
+           
+            
+        </div>
+            </div>
+    </section>
+    <div>
+        @(Html.Kendo().Window()
+    .Name("EditEmailPopup")
+    .Title("Update Email Detailes")
+    .Content("loading user info...")
+    .Modal(true)
+    .Draggable()
+    .Resizable()
+    .Width(600)
+    .Visible(false)
+        )
+    </div>
+    <script>
+
+      function SendSelectdMailBoxIdAndLoginUser()
+    {
+            return {
+                MailBoxId: $("#ListOfMailBox").val(),
+                UserId: '@Session["UserId"]'
+            }
+    }
+
+    function FunctionEditEmail(id)
+    {
+        $.ajax({
+            url: '/File/ReadMailDetails',
+            cache: false,
+            async: false,
+            data: { MailId: id },
+            success: function (EditContent) {
+
+                $("#EditEmailPopup").data("kendoWindow").content(EditContent);
+                $("#EditEmailPopup").data("kendoWindow").open().center();
+            },
+            error: function (error) {
+                 alert('Error');
+            }
+        })
+
+
+    }
+    $("table").on("click", ".ActiveDisabledCheckbox", function () {
+
+        var Flag;
+        var URl='@SessionMangment.Users_.APIHostUrl/api/ApiHome/UpdateFileStatus';
+        if ($(this).find('.km-switch-off').length == 0)
+        {
+            Flag = '1';
+        }
+        else {
+            Flag = '0'
+        }       
+        $.ajax({
+            url: URl,
+            cache: false,
+            async: false,
+            data: { Id: $(this).attr('id'), StatusId: Flag },
+            success: function (Data) {
+                if (Data == true) {
+
+                    showSuccessNotification("Email Status updated Successfully");
+                }
+                else {
+                    alert("Error ");
+                }
+                $("#mainWidget").data("kendoGrid").dataSource.read();
+            },
+            error: function (error) {
+                // alert('Error');
+            }
+        })
+    });
+
+    </script>
+    @Scripts.Render("~/Scripts/mails.js")
+</div>

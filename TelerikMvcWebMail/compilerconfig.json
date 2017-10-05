@@ -1,0 +1,54 @@
+﻿[
+  {
+    "outputFile": "Content/common.css",
+    "inputFile": "Content/common.scss"
+  },
+  {
+    "outputFile": "Content/main/common.css",
+    "inputFile": "Content/main/common.scss"
+  },
+  {
+    "outputFile": "Content/calendar.css",
+    "inputFile": "Content/calendar.scss"
+  },
+  {
+    "outputFile": "Content/mail.css",
+    "inputFile": "Content/mail.scss"
+  },
+  {
+    "outputFile": "Content/sidebarFooter.css",
+    "inputFile": "Content/sidebarFooter.scss"
+  },
+  {
+    "outputFile": "Content/contacts.css",
+    "inputFile": "Content/contacts.scss"
+  },
+  {
+    "outputFile": "Content/signIn.css",
+    "inputFile": "Content/signIn.scss"
+  },
+  {
+    "outputFile": "Content/sidebar.css",
+    "inputFile": "Content/sidebar.scss"
+  },
+  {
+    "outputFile": "Content/metroThemeCustomization.css",
+    "inputFile": "Content/metroThemeCustomization.scss"
+  },
+  {
+    "outputFile": "Content/tasks.css",
+    "inputFile": "Content/tasks.scss"
+  },
+  {
+    "outputFile": "Content/mailNew.css",
+    "inputFile": "Content/mailNew.scss"
+  },
+  {
+    "outputFile": "Content/new.css",
+    "inputFile": "Content/new.scss"
+  },
+  {
+    "outputFile": "Content/about.css",
+    "inputFile": "Content/about.scss"
+  }
+]

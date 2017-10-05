@@ -1,0 +1,118 @@
+﻿@model TelerikMvcWebMail.Models.FilesViewModel
+<div class="inner-section">
+    <div class="col-md-12" style="margin-top:20px">
+        <h3>New Email</h3>
+        <hr>
+@using (Ajax.BeginForm("SaveNewFile", "File", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSucessFunctionFormAddEditEmail" }, new { @id = "FormAddEditEmail" }))
+{
+    @Html.HiddenFor(model=>model.RequestFrom,new { Value="NewEmail"})
+        <div class="row">
+            <div class="form-group col-md-8 ">
+                @Html.Label("Name")
+                <textarea class="form-control"
+                          cols="20"
+                          id="Name"
+                          name="Name"
+                          rows="2" required></textarea>  
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-8 ">
+                @Html.Label("Url")
+                <textarea class="form-control"
+                          cols="20"
+                          id="Path"
+                          name="Path"
+                          rows="2" ></textarea>   
+                @Html.ValidationMessageFor(model => model.Path, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-8 ">
+                @Html.Label("Type")
+                @(Html.Kendo().DropDownList()
+                  .Name("TypeId")
+                  .DataTextField("Text")
+                  .DataValueField("Value")                  
+                  .BindTo(new List<SelectListItem>() {
+                      new SelectListItem() {
+                          Text = "Select Type",
+                          Value = ""
+                      },
+                      new SelectListItem() {
+                          Text = "Exact",
+                          Value = "0"
+                      },
+                      new SelectListItem() {
+                          Text = "Container",
+                          Value = "1"
+                      },
+                      new SelectListItem() {
+                          Text = "Pattern",
+                          Value = "2"
+                      }
+                  })                 
+                  .HtmlAttributes(new { style = "width: 100%" })
+                        )
+                @Html.ValidationMessageFor(model => model.TypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-8 ">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="button" id="BtnCloseNewEmail" value="Close" class="btn btn-defoult" />
+            </div>
+        </div>
+}
+    </div>
+</div>
+<script>
+
+    $("#FormAddEditEmail").submit(function (eventObj) {
+       
+        var treeview = $("#navigationTreeView").data("kendoTreeView");
+        var dataItem = treeview.dataItem(treeview.select());
+       // alert(dataItem.value);
+        $('<input />').attr('type', 'hidden')
+            .attr('name', "FolderId")
+            .attr('value', dataItem.value)
+            .appendTo('#FormAddEditEmail');
+       // eventObj.preventdefault()
+    });
+
+    $(function () {
+        $("#FormAddEditEmail").kendoValidator({
+            rules: {
+                greaterdate: function (input) {
+                    if (input.is("[data-val-greaterdate]") && input.val() != "") {
+                        var date = kendo.parseDate(input.val()),
+                            earlierDate = kendo.parseDate($("[name='" + input.attr("data-val-greaterdate-earlierdate") + "']").val());
+                        return !date || !earlierDate || earlierDate.getTime() < date.getTime();
+                    }
+
+                    return true;
+                }
+            },
+            messages: {
+                greaterdate: function (input) {
+                    return input.attr("data-val-greaterdate");
+                }
+            }
+        });
+    });
+
+    function OnSucessFunctionFormAddEditEmail(e)
+    {       
+        if (e == true) {
+            showSuccessNotification("Email saved Successfully");
+        }
+        else {
+            alert("Error ");
+        }
+        $('#FormAddEditEmail')[0].reset();
+        $("#mainWidget").data("kendoGrid").dataSource.read();
+    }
+
+
+</script>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9cbc6876a3804688be15463b58762131" Name="Diagram1">
+        <EntityTypeShape EntityType="WebMailModel.File" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebMailModel.Folder" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebMailModel.MailBox" Width="1.5" PointX="0.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebMailModel.User" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebMailModel.UserMailBox" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="WebMailModel.FK__Files__FolderId__756D6ECB" ManuallyRouted="false" />
+        <AssociationConnector Association="WebMailModel.FK__Folder__MailBoxI__634EBE90" ManuallyRouted="false" />
+        <AssociationConnector Association="WebMailModel.FK__UserMailB__Mailb__4F47C5E3" ManuallyRouted="false" />
+        <AssociationConnector Association="WebMailModel.FK__UserMailB__UserI__40F9A68C" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

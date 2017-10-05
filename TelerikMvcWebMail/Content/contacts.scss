@@ -1,0 +1,340 @@
+﻿@import '_variables.scss';
+
+
+.main-section {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.inner-section {
+
+    .edit-buttons {
+        display: none;
+        position: absolute;
+
+        .k-button {
+            display: inline-block;
+            width: (16/14)*1em;
+            line-height: (16/14);
+            padding: 2px;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border-width: 2px;
+
+            .icon:before {
+                font: 13px WebComponentsIcons;
+            }
+        }
+
+        .i-mail:before {
+            content: "\e809";
+        }
+
+        .i-edit:before {
+            content: "\e10b";
+        }
+
+        .i-delete:before {
+            content: "\e10c";
+        }
+    }
+}
+
+    .contacts-list {
+        border: 0;
+    }
+
+    .contact-view {
+        position: relative;
+        cursor: pointer;
+        border-color: #ebebeb;
+
+        &:hover,
+        &.k-state-selected {
+            color: inherit;
+            background: #fafafa;
+            border-color: #ebebeb;
+        }
+
+        &:hover {
+
+            .edit-buttons {
+                display: block;
+            }
+        }
+
+        .image-wrapper {
+            flex: none;
+            overflow: hidden;
+        }
+
+            img {
+                width: 100%;
+            }
+
+        &:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    }
+
+    .label {
+        display: block;
+        font-size: 11px;
+        margin-top: 10px;
+        color: #999999;
+    }
+
+    .details {
+        white-space: nowrap;
+
+        .column {
+            display: inline-block;
+            vertical-align: top;
+            overflow: hidden;
+            width: 62%;
+
+            &:first-child {
+                width: 38%;
+            }
+
+            p,
+            p > span  {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            p > span:nth-child(2) {
+                width: 100%;
+                display: inline-block;
+            }
+        }
+    }
+
+        .header {
+            display: flex;
+
+            .name {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &:after {
+                content: "";
+                display: block;
+                clear: both;
+            }
+        }
+
+        .image-wrapper {
+            width: 70px;
+            height: 70px;
+            margin-right: 18px;
+        }
+
+
+/* List view - default */
+.list-view {
+    flex-direction: row;
+
+    .list-view-inner {
+        flex: 0.3;
+        overflow: auto;
+        border-right: 1px solid #ebebeb;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .contacts-list {
+            overflow: hidden;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .contact-view {
+            line-height: 50px;
+            font-size: 15px;
+            border-width: 0 0 1px;
+            border-color: #ebebeb;
+            line-height: 50px;
+
+            &.k-state-selected {
+                color: #000;
+
+                &:before {
+                    content: "";
+                    display: block;
+
+                }
+            }
+        }
+
+        .details {
+            display: none;
+        }
+    }
+
+    .contacts-list {
+
+        .image-wrapper {
+            width: 50px;
+            height: 50px;
+            margin-right: 16px;
+        }
+
+        .edit-buttons {
+            right: 15px;
+            top: 0;
+        }
+    }
+
+    .single-contact-details {
+        padding: 17px 15px;
+        flex: 0.7;
+        border: 0;
+
+        .contact-view {
+            border: 0;
+            cursor: default;
+            color: #000;
+
+            &:hover {
+                background: transparent;
+            }
+        }
+
+        .header {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #fafafa;
+
+            .edit-buttons {
+                display: block;
+                left: 105px;
+                top: 60px;
+            }
+
+            .name {
+                font: 100 30px 'Segoe UI';
+            }
+
+        }
+    }
+}
+
+/* Card view */
+.card-view {
+
+    .list-view-inner {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .single-contact-details {
+        display: none;
+    }
+
+    .contacts-list {
+        border-color: #ebebeb;
+        overflow: hidden;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .contact-view {
+        float: left;
+        width: 33.33333333%;
+        padding: 15px;
+        box-sizing: border-box;
+        border-width: 0 0 1px 1px;
+
+        &.k-state-selected,
+        &:hover {
+            color: #000;
+        }
+
+        &:last-child {
+            border-right: 1px solid #ebebeb;
+        }
+    }
+
+    .header {
+
+        .name {
+            max-width: calc(100% - 88px);
+            display: inline-block;
+            padding-top: 7px;
+            font-weight: 100;
+            font-size: 18px;
+        }
+
+        .edit-buttons {
+            display: block;
+            top: 50px;
+            left: 100px;
+        }
+    }
+
+    .details {
+        display: block;
+    }
+}
+
+.k-listview {
+    position: static;
+}
+
+.contact-edit-view {
+    padding: 15px 15px 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border: 0;
+    z-index: 9;
+    overflow: auto;
+
+    &.k-state-selected {
+        color: inherit;
+        background: #fff;
+        border-color: #fff;
+    }
+
+    .k-dropdown,
+    .k-textbox {
+        width: 400px;
+    }
+
+    .forms-panel {
+        width: 400px;
+    }
+
+    .forms-panel,
+    .upload-wrapper {
+        float: left;
+    }
+
+
+}
+
+
+.list-view .contacts-list.k-pdf-export,
+.card-view .contacts-list.k-pdf-export {
+    overflow: visible;
+}
+
+
+@media screen and (max-width: 1200px) {
+    .card-view {
+
+        .contact-view {
+            width: 50%;
+        }
+    }
+}
