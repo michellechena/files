@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
 
+[assembly: OwinStartup(typeof(TelerikMvcWebMail.Startup))]
 namespace TelerikMvcWebMail
 {
+    
+
     public partial class Startup
     {
         public void Configuration(IAppBuilder app)

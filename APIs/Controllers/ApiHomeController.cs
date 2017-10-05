@@ -23,18 +23,34 @@ namespace APIs.Controllers
         [HttpPost]
         public IHttpActionResult ValidateUser(SignIn Model)
         {
+            User CheckUserExsit = new Entity.User();
+            using (var Entity = new WebMailEntities())
+            {
+                CheckUserExsit = Entity.Users.Where(x => x.Email == Model.UserName).FirstOrDefault();
+                if (CheckUserExsit == null)
+                {
+                    User CheckUserExsit1 = new Entity.User();
+                    CheckUserExsit1.Email = Model.UserName;
+                    CheckUserExsit1.FirstName = Model.UserName;
+                    CheckUserExsit1.LastName = Model.UserName;
+                    Entity.Users.Add(CheckUserExsit1);
+                    Entity.SaveChanges();
+                }
+
+            }
+
             UserApIModel _User = new UserApIModel();
             string Result = string.Empty;
             using (var Entity = new WebMailEntities())
             {
-                _User= Entity.Users.Where(s => s.Email.ToUpper() == Model.UserName.ToUpper()
+                _User = Entity.Users.Where(s => s.Email.ToUpper() == Model.UserName.ToUpper()
               ).Select(x => new UserApIModel
-                {
-                    Email = x.Email,
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    id = x.id
-                }).FirstOrDefault();
+              {
+                  Email = x.Email,
+                  FirstName = x.FirstName,
+                  LastName = x.LastName,
+                  id = x.id
+              }).FirstOrDefault();
 
             }
             return Json(_User);

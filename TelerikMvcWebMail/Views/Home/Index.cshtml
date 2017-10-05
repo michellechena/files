@@ -52,78 +52,15 @@
     <div class="content">
         <h2>Sign In</h2>
 
-        @*<div>
-            @using (Html.BeginForm("SignIn", "SignIn",
-                                   FormMethod.Post, new { @class = "example" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-horizontal">
-
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @Value = "sudhirshinde431@gmail.com" } })
-                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <br>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Sign In" class="btn k-primary form-control" />
-                        </div>
-                    </div>
-                    @if (ViewBag.LoginError != null)
-                    {
-                        <div class="form-group">
-                            <span class="text-danger">@ViewBag.LoginError</span>
-                        </div>
-                    }
-
-                </div>
-            }
-            </div>*@
-
-        @if (!Request.IsAuthenticated)
-        {
-    <!-- If the user is not authenticated, display the sign-in button -->
-            <a href="@Url.Action("SignIn", "Home")" style="text-decoration: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="300px" height="50px" viewBox="0 0 3278 522" class="SignInButton">
-                <style type="text/css">
-                    .fil0:hover {
-                        fill: #4B4B4B;
-                    }
-
-                    .fnt0 {
-                        font-size: 260px;
-                        font-family: 'Segoe UI Semibold', 'Segoe UI';
-                        text-decoration: none;
-                    }
-</style>
-                <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
-                <rect x="150" y="129" width="122" height="122" fill="#F35325" />
-                <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
-                <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
-                <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
-                <text x="470" y="357" fill="white" class="fnt0">Sign in with Microsoft</text>
-        </svg>
-            </a>
-            }
-
-        @if (ViewBag.LoginError != null)
-        {
-            <div class="form-group" style="padding-top:15px">
-                <span class="text-danger">@ViewBag.LoginError</span>
-            </div>
-
-            <div class="links" style="padding-top:15px">
-               <a href="Home/Index?ReturnUrl=Loginagin">Login again</a>
-            </div>
-        }
+        @Html.Partial("_LoginPartial")
         
     </div>
 
 </body>
 </html>
+<script>
+    if("@User.Identity.Name" !="")
+    {
+        window.location.href = "/File/index";
+    }
+    </script>

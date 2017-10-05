@@ -95,10 +95,10 @@
         <div class="image-wrapper">
             <img src="https://demos.telerik.com/kendo-ui/content/web/Customers/PICCO.jpg" style="border-radius: 100%" />
         </div>
-        <p class="name">@Session["FullName"]</p>
+        @*<p class="name">@Session["FullName"]</p>*@
         <p>@Session["UserEmail"]</p>     
       
-         <a href = "@Url.Action("SignOut", "Home")" class="btn btn-primary" > Sign Out </a>
+         <a href = "@Url.Action("SignOut", "Account")" class="btn btn-primary" > Sign Out </a>
     
     </script>
     <script type="text/kendo-ui" id="menu-item-template">

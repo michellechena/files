@@ -1,5 +1,81 @@
 ﻿@{
     ViewBag.Title = "Sign Out";
+    Layout = null;
+
 }
-<h2>@ViewBag.Title.</h2>
-<p class="text-success">You have successfully signed out.</p>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SignIn</title>
+    <link type="image/x-icon" href="~/favicon-progress.ico" rel="shortcut icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.metro.min.css" rel="stylesheet" />
+    <link href="http://kendo.cdn.telerik.com/2017.1.118/styles/kendo.dataviz.metro.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link type="text/css" href="~/Content/signIn.css" rel="stylesheet" />
+    <script src="http://kendo.cdn.telerik.com/2017.1.118/js/jquery.min.js"></script>
+    <script src="http://kendo.cdn.telerik.com/2017.1.118/js/kendo.all.min.js"></script>
+    <script src="http://kendo.cdn.telerik.com/2017.1.118/js/kendo.aspnetmvc.min.js"></script>
+    <script src="http://kendo.cdn.telerik.com/2017.1.118/js/kendo.timezones.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js"></script>
+    @Scripts.Render("~/Scripts/sign-in.js")
+</head>
+<body>
+    <div class="sidebar">
+        <div class="header">
+            <a href="@Url.Action("Index", "Home")" title="Go to WebMail">
+                <h1>WebMail</h1>
+                <p>ASP.NET MVC Demo App</p>
+            </a>
+        </div>
+        <div class="footer">
+            <p>
+                Copyright &copy; @DateTime.Now.Year
+                <br />
+                Progress Software Corporation and/or its subsidiaries or affiliates.
+            </p>
+            <p>
+                All Rights Reserved.
+            </p>
+        </div>
+    </div>
+    <div class="content">
+        <h2>@ViewBag.Title.</h2>
+        @if (Request.IsAuthenticated)
+        {
+            <text>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @Html.ActionLink("Hello " + User.Identity.Name + "!", "Index", "UserProfile", routeValues: null, htmlAttributes: null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Sign out", "SignOut", "Account")
+                    </li>
+                </ul>
+            </text>
+
+        }
+        else
+        {
+            <p class="text-success">You have successfully signed out.</p><br>
+            <ul class="nav navbar-nav navbar-right">
+                <li>@Html.ActionLink("Sign in", "SignIn", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            </ul>
+        }
+
+       
+
+    </div>
+
+</body>
+</html>
+
+
+
+

@@ -351,8 +351,12 @@
     <None Include="Properties\PublishProfiles\WebFileApp - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\WebFileApp - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\WebFileWebApp - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFileWebApp - FTP %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFileWebApp - FTP %284%29.pubxml" />
     <None Include="Properties\PublishProfiles\WebFileWebApp - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\WebFileWebApp - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFileWebApp - Web Deploy %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFileWebApp - Web Deploy %284%29.pubxml" />
     <None Include="Properties\PublishProfiles\WebFileWebApp - Web Deploy.pubxml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\UserProfile\Index.cshtml" />

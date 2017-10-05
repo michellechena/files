@@ -16,7 +16,7 @@ namespace TelerikMvcWebMail
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "File", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

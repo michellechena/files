@@ -1,18 +1,13 @@
-﻿using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Web;
-using System.Web.Mvc;
-using TelerikMvcWebMail.Filter;
-using TelerikMvcWebMail.Models;
-
-namespace TelerikMvcWebMail.Controllers
+﻿namespace TelerikMvcWebMail.Controllers
 {
-   // [Authorize]
+
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Web;
+    using System.Web.Mvc;
+    using TelerikMvcWebMail.Models;
+    // [Authorize]
     //[SessionExpire]
     [Authorize]
    // [Authorize]
@@ -27,7 +22,19 @@ namespace TelerikMvcWebMail.Controllers
         } 
         public ActionResult Index()
         {
-           
+            var LoginUser = User.Identity.Name;
+            SignIn Model = new Models.SignIn();
+            Model.UserName = LoginUser;
+            SessionMangment.Users_.APIHostUrl = System.Configuration.ConfigurationManager.AppSettings["APIHostUrl"];
+            var UserData = TelerikMvcWebMail.Common.CallWebApi("api/ApiHome/ValidateUser", RestSharp.Method.POST, Model);
+            UserViewModel _User = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<UserViewModel>(UserData);
+          
+                SessionMangment.Users_.FullName = _User.FirstName + " " + _User.LastName;
+                SessionMangment.Users_.UserEmail = _User.Email;
+                SessionMangment.Users_.UserId = _User.id.ToString();
+                //return RedirectToAction("Index", "File");
+            
+
 
             int MailBoxid = 0;
             try
@@ -169,7 +176,7 @@ namespace TelerikMvcWebMail.Controllers
                     Model.FileContent = FileContent;                    
                     Model.FileName = file.FileName;
                     Model.FolderId = Folderid;
-                    var Data = TelerikMvcWebMail.Common.CallWebApi("api/ApiHome/SubmitUploadFile", RestSharp.Method.POST, Model);
+                    var Data = Common.CallWebApi("api/ApiHome/SubmitUploadFile", RestSharp.Method.POST, Model);
                     bool Result = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<bool>(Data);
                     if(Result)
                     {
